@@ -17,6 +17,7 @@
   "dependencies": {
     "@ptkdev/logger": "^1.8.0",
     "axios": "^1.7.9",
+    "body-parser": "^1.20.3",
     "cheerio": "^1.0.0",
     "express": "^4.21.2"
   }
