@@ -2,7 +2,7 @@ import axios from "axios";
 
 class URI 
 {
-    constructor(URL = `https://toram-id.com/`)
+    constructor(URL = `https://toram-id.com`)
     {
         this.URI = URL;
     }
