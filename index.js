@@ -3,6 +3,8 @@ import { Log } from "./helper/Log.js";
 import { List } from "./lib/List/list.js";
 import bodyParser from "body-parser";
 import { Items } from "./lib/Perlengkapan&Crystal/item.js";
+import { ListPeta } from "./lib/Peta&Npc/listPeta.js";
+import { ListNPC } from "./lib/Peta&Npc/listNpc.js";
 const App = express();
 const Port = 3000;
 
@@ -45,6 +47,40 @@ App.post('/items', async (req,res) => {
         res.status(response.status).json({Error: response.statusText, status: response.status}).end();
     }
 });
+
+App.get('/list/peta', async (req,res) => {
+    try{
+        res.set({
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        });
+        const response = await ListPeta();
+        res.status(response.status).json(response).end();
+    }catch(e)
+    {
+        Log.error(`Server ERROR ${e}`);
+        console.error(e);
+        const response = e.response;
+        res.status(response.status).json({Error: response.statusText, status: response.status}).end();
+    }
+})
+
+App.get('/list/npc', async (req,res) => {
+    try{
+        res.set({
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        });
+        const response = await ListNPC();
+        res.status(response.status).json(response).end();
+    }catch(e)
+    {
+        Log.error(`Server ERROR ${e}`);
+        console.error(e);
+        const response = e.response;
+        res.status(response.status).json({Error: response.statusText, status: response.status}).end();
+    }
+})
 
 App.get('*', async (req,res) => {
     res.set({
