@@ -1,100 +1,42 @@
 import express from "express";
-import { Log } from "./helper/Log.js";
-import { List } from "./lib/List/list.js";
-import bodyParser from "body-parser";
-import { Items } from "./lib/Perlengkapan&Crystal/item.js";
-import { ListPeta } from "./lib/Peta&Npc/listPeta.js";
-import { ListNPC } from "./lib/Peta&Npc/listNpc.js";
+import bodyParser from "body-parser"
+import { Log } from "./Helper/Log.js";
+import ListController  from "./Controller/ListController.js";
+import ItemController from "./Controller/ItemController.js";
+import FillStatController from "./Controller/FillStatController.js";
 const App = express();
 const Port = 3000;
 
-
 App.use(bodyParser.json());
 
-App.get('/list', async (req,res) => {
-    try{
-        res.set({
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        });
-        const response = await List();
-        res.status(response.status).json(response).end();
-    }catch(e)
-    {
-        Log.error(`Server ERROR ${e}`);
-        console.error(e);
-        const response = e.response;
-        res.status(response.status).json({Error: response.statusText, status: response.status}).end();
-    }
-})
-
-App.post('/items', async (req,res) => {
-    try{
-        res.set({
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        });
-
-        const { link, label } = req.body;
-        if(!link || !label) return res.status(400).json({Error: "Payload Not Correct"}).end();
-        const response = await Items(link,label);
-        res.status(response.status).json(response).end();
-    }catch(e)
-    {
-        Log.error(`Server ERROR ${e}`);
-        console.error(e);
-        const response = e.response;
-        res.status(response.status).json({Error: response.statusText, status: response.status}).end();
-    }
+App.get("/list/:type", async (req, res) => {
+    return await ListController.void(req,res); 
 });
 
-App.get('/list/peta', async (req,res) => {
-    try{
-        res.set({
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        });
-        const response = await ListPeta();
-        res.status(response.status).json(response).end();
-    }catch(e)
-    {
-        Log.error(`Server ERROR ${e}`);
-        console.error(e);
-        const response = e.response;
-        res.status(response.status).json({Error: response.statusText, status: response.status}).end();
-    }
-})
+App.post("/items", async (req, res) => {
+  return await ItemController.void(req,res);
+});
 
-App.get('/list/npc', async (req,res) => {
-    try{
-        res.set({
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        });
-        const response = await ListNPC();
-        res.status(response.status).json(response).end();
-    }catch(e)
-    {
-        Log.error(`Server ERROR ${e}`);
-        console.error(e);
-        const response = e.response;
-        res.status(response.status).json({Error: response.statusText, status: response.status}).end();
-    }
-})
-
-App.get('*', async (req,res) => {
-    res.set({
-        "Content-Type":"application/json",
-        "Accept":"application/json"
-    });
-
-    res.status(404).json({
-        message: "API NOT FOUND",
-        status:404
-    }).end();
+App.get("/fill_stats/formula", async (req,res) => {
+  return await FillStatController.void(req,res);
 })
 
 
-App.listen(Port,() => {
-    Log.info(`Server Listening At http://localhost:${Port}`);
-})
+App.get("*", async (req, res) => {
+  res.set({
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  });
+
+  res
+    .status(404)
+    .json({
+      message: "API NOT FOUND",
+      status: 404,
+    })
+    .end();
+});
+
+App.listen(Port, () => {
+  Log.info(`Server Listening At http://localhost:${Port}`);
+});
